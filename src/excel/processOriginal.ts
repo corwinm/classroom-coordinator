@@ -8,23 +8,42 @@ export default function processOriginal(file: File) {
       alert("Failed to load file");
       return;
     }
-    const wb = new ExcelJS.Workbook();
-    const workbook = await wb.xlsx.load(reader.result);
-    console.log(
-      `Found worksheets: ${workbook.worksheets.map((sheet) => sheet.name)}`
-    );
-    const roster = workbook.worksheets.find(
-      (sheet) => sheet.name.toLowerCase() === "rotation"
-    );
+    let workbook: ExcelJS.Workbook;
+    let rotation: ExcelJS.Worksheet | undefined;
+    try {
+      const wb = new ExcelJS.Workbook();
+      workbook = await wb.xlsx.load(reader.result);
+      console.log(
+        `Found worksheets: ${workbook.worksheets.map((sheet) => sheet.name)}`
+      );
+      rotation = workbook.worksheets.find(
+        (sheet) => sheet.name.toLowerCase() === "rotation"
+      );
+    } catch (error) {
+      alert("Failed to read Excel doc. Check uploaded document and try again.");
+      return;
+    }
+
+    if (!rotation) {
+      alert("Couldn't find worksheet named 'Rotation'");
+      return;
+    }
 
     // Remove previous week
-    roster?.spliceRows(3, 6);
+    rotation.spliceRows(2, 7);
 
     // Copy down last week to new week
-    roster?.getRows(25, 6)?.forEach((row, index) => {
+    rotation.getRows(24, 6)?.forEach((row, index) => {
+      if (!rotation) {
+        alert("Couldn't find worksheet named 'Rotation'");
+        return;
+      }
+      const copyRow = rotation.getRow(index + 32);
+      copyRow.height = row.height;
+
       for (const col of [2, 3, 4]) {
-        const cell = roster.getCell(index + 25, col);
-        const copy = roster.getCell(index + 32, col);
+        const cell = rotation.getCell(index + 24, col);
+        const copy = rotation.getCell(index + 31, col);
         copy.style = cell.style;
 
         if ([2, 4].includes(col)) {
@@ -36,12 +55,12 @@ export default function processOriginal(file: File) {
           } else if (index === 1) {
             let i = 0;
             while (cell.value && !copy.value && i < 5) {
-              const shifted = roster.getCell(30 - i, col);
+              const shifted = rotation.getCell(30 - i, col);
               copy.value = shifted.value;
               i += 1;
             }
           } else if (cell.value) {
-            const shifted = roster.getCell(index + 24, col);
+            const shifted = rotation.getCell(index + 24, col);
             copy.value = shifted.value;
           }
           continue;
@@ -58,7 +77,7 @@ export default function processOriginal(file: File) {
     const url = window.URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = "test.xlsx";
+    anchor.download = file.name;
     anchor.click();
     window.URL.revokeObjectURL(url);
   };
