@@ -28,7 +28,7 @@ const FileInput: ForwardRefRenderFunction<HTMLInputElement, FileInputProps> = (
         {fileName === null ? (
           <div>
             Drag file here or{" "}
-            <span className="text-blue-600 underline">select file</span>
+            <span className="text-blue-600 underline">select a file</span>
           </div>
         ) : (
           fileName
@@ -45,7 +45,7 @@ const FileInput: ForwardRefRenderFunction<HTMLInputElement, FileInputProps> = (
           onDragLeave={(e) => setDragging(false)}
           onDragEnd={(e) => setDragging(false)}
           onDrop={(e) => setDragging(false)}
-          className="absolute top-0 left-0 w-full h-full cursor-pointer"
+          className="absolute top-0 left-0 w-full h-full cursor-pointer text-transparent"
         />
       </div>
     </>
