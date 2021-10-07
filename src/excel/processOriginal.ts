@@ -1,4 +1,4 @@
-import ExcelJS from "exceljs";
+import { Workbook, Worksheet } from "exceljs";
 
 export default function processOriginal(file: File) {
   const reader = new FileReader();
@@ -8,10 +8,10 @@ export default function processOriginal(file: File) {
       alert("Failed to load file");
       return;
     }
-    let workbook: ExcelJS.Workbook;
-    let rotation: ExcelJS.Worksheet | undefined;
+    let workbook: Workbook;
+    let rotation: Worksheet | undefined;
     try {
-      const wb = new ExcelJS.Workbook();
+      const wb = new Workbook();
       workbook = await wb.xlsx.load(reader.result);
       console.log(
         `Found worksheets: ${workbook.worksheets.map((sheet) => sheet.name)}`
