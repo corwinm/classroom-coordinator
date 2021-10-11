@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "VITE_BUILD_TIMESTAMP=$(date) vite",
-    "build": "VITE_BUILD_TIMESTAMP=$(date +%s) tsc && vite build",
+    "build": "tsc && VITE_BUILD_TIMESTAMP=$(date) vite build",
     "deploy": "gh-pages -d dist",
     "serve": "vite preview"
   },
