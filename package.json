@@ -2,8 +2,8 @@
   "name": "classroom-coordinator",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "VITE_BUILD_TIMESTAMP=$(date) vite",
+    "build": "VITE_BUILD_TIMESTAMP=$(date +%s) tsc && vite build",
     "deploy": "gh-pages -d dist",
     "serve": "vite preview"
   },
