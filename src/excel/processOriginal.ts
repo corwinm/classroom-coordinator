@@ -1,4 +1,16 @@
-import { Workbook, Worksheet } from "exceljs";
+import { Cell, Workbook, Worksheet } from "exceljs";
+
+function parseDateFromHeaderCell(header: Cell) {
+  return (
+    header.value?.toString().split(" ")[1].split("/").slice(0, 2).join("-") ||
+    "N/A"
+  );
+}
+
+function createFileName(previous: string, start: string, end: string) {
+  const parsedName = previous.substring(0, previous.indexOf("rotation") + 8);
+  return `${parsedName} ${start} to ${end}`;
+}
 
 export default function processOriginal(file: File) {
   const reader = new FileReader();
@@ -69,6 +81,8 @@ export default function processOriginal(file: File) {
         copy.value = cell.value;
       }
     });
+    const start = parseDateFromHeaderCell(rotation.getCell(3, 2));
+    const end = parseDateFromHeaderCell(rotation.getCell(31, 4));
 
     const data = await workbook.xlsx.writeBuffer();
     const blob = new Blob([data], {
@@ -77,7 +91,7 @@ export default function processOriginal(file: File) {
     const url = window.URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = file.name;
+    anchor.download = createFileName(file.name, start, end);
     anchor.click();
     window.URL.revokeObjectURL(url);
   };
