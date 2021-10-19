@@ -67,12 +67,12 @@ export default function processOriginal(file: File) {
           } else if (index === 1) {
             let i = 0;
             while (cell.value && !copy.value && i < 5) {
-              const shifted = rotation.getCell(30 - i, col);
+              const shifted = rotation.getCell(29 - i, col);
               copy.value = shifted.value;
               i += 1;
             }
           } else if (cell.value) {
-            const shifted = rotation.getCell(index + 24, col);
+            const shifted = rotation.getCell(index + 23, col);
             copy.value = shifted.value;
           }
           continue;
