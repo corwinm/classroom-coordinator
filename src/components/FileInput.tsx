@@ -10,7 +10,7 @@ interface FileInputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const FileInput: ForwardRefRenderFunction<HTMLInputElement, FileInputProps> = (
-  { id, label, accept, ...rest },
+  { id, label, accept, onChange, ...rest },
   ref
 ) => {
   const [fileName, setFileName] = useState<string | null>(null);
@@ -40,7 +40,10 @@ const FileInput: ForwardRefRenderFunction<HTMLInputElement, FileInputProps> = (
           accept={accept}
           {...rest}
           style={{ textIndent: "-999em" }}
-          onChange={(e) => setFileName(e.target.files?.[0]?.name || null)}
+          onChange={(e) => {
+            setFileName(e.target.files?.[0]?.name || null);
+            onChange?.(e);
+          }}
           onDragEnter={(e) => setDragging(true)}
           onDragLeave={(e) => setDragging(false)}
           onDragEnd={(e) => setDragging(false)}
