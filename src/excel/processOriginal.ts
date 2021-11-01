@@ -18,7 +18,7 @@ const thisWeekStartRow = 31;
 const tuesdayCol = 2;
 const choreCol = 3;
 const thursdayCol = 4;
-const noSchoolDefaultText = "No School";
+const noSchoolDefaultText = "NO SCHOOL";
 
 export default function processOriginal(
   file: File,
@@ -87,7 +87,7 @@ export default function processOriginal(
           workingRows?.forEach((row, index) => {
             if (noSchoolTextFound) return;
             const cell = rotation?.getCell(index + lastWeekStartRow[col], col);
-            if (cell?.value === noSchoolText) {
+            if (cell?.value?.toString().toUpperCase() === noSchoolText) {
               noSchoolTextFound = true;
               lastWeekStartRow[col] = lastWeekStartRow[col] - 7;
               lastWeekEndRow[col] = lastWeekEndRow[col] - 7;
@@ -119,7 +119,7 @@ export default function processOriginal(
               (col === tuesdayCol && tuesdayHoliday) ||
               (col === thursdayCol && thursdayHoliday)
             ) {
-              copy.value = index === 3 ? "No School" : "";
+              copy.value = index === 3 ? noSchoolText : "";
             } else if (index === 1) {
               let i = 0;
               while (cell.value && !copy.value && i < 5) {
